@@ -10,7 +10,7 @@
 	rel="stylesheet">
 <!--Import materialize.css-->
 <link type="text/css" rel="stylesheet"
-	href=/"materialize/css/materialize.css" media="screen,projection" />
+	href="materialize/css/materialize.css" media="screen,projection" />
 <link type="text/css" rel="stylesheet"
 	href="/materialize/css/materialize.min.css" media="screen,projection" />
 </head>
@@ -30,8 +30,20 @@
 	  		</button>
 		</form>
 	
+		<br/>
+		<br/>
 		<a href="/listapessoas">Lista Pessoas</a>
-	
+		<br/>
+		<br/>
+		
+		<form action="pesquisarpessoa" method="post">
+			<label>Pesquisa por Nome:</label>
+			<input name="nomepesquisa">
+			<input type="submit" value="Buscar" class="btn waves-effect waves-light">
+		</form>
+		
+		<br/>
+		<br/>
 		<table>
 			<tr th:each="pessoa : ${pessoas}">
 				<!-- foreach do thymeleaf, recuperando alista do bd pessoas e jogando em varipaveis pessoa -->

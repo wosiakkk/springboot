@@ -6,8 +6,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import curso.springboot.model.Pessoa;
@@ -115,4 +117,14 @@ public class PessoaController {
 		return modelAndView;
 	}
 	
+	/*Método para o campo de busca por nome. @PostMapping é a abreviação de @RequestMapping(method = RequestMethod.POST) 
+	 * A anotação RequestParam pega o parâmetro enviado pelo action do form via post*/
+	@PostMapping("**/pesquisarpessoa")
+	public ModelAndView pesquisar(@RequestParam("nomepesquisa") String nomepesquisa) {
+		ModelAndView modelAndView = new ModelAndView("cadastro/cadastropessoa");
+		modelAndView.addObject("pessoas", pessoaRepository.findPessoaByName(nomepesquisa));
+		//add um objeto vazio para a o form funcionar corretamente, por causa da edição
+		modelAndView.addObject("pessoaobj", new Pessoa());
+		return modelAndView;
+	}
 }

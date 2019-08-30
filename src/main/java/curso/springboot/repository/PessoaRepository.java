@@ -1,5 +1,8 @@
 package curso.springboot.repository;
 
+import java.util.List;
+
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -13,4 +16,8 @@ import curso.springboot.model.Pessoa;
 @Transactional // anotação necessária já que a interface irá modificar BD
 public interface PessoaRepository extends CrudRepository<Pessoa, Long> {
 
+	/*Método para buscar usuários por nome, como não é um método padrão do
+	 * CrudRepository, fazemos uma query customizada em JPQL*/
+	@Query(value = "select p from Pessoa p where p.nome like %?1%")
+	List<Pessoa> findPessoaByName(String nome);
 }
