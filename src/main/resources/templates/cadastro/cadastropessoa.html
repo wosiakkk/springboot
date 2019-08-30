@@ -10,19 +10,21 @@
 	rel="stylesheet">
 <!--Import materialize.css-->
 <link type="text/css" rel="stylesheet"
-	href="materialize/css/materialize.css" media="screen,projection" />
+	href=/"materialize/css/materialize.css" media="screen,projection" />
 <link type="text/css" rel="stylesheet"
-	href="materialize/css/materialize.min.css" media="screen,projection" />
+	href="/materialize/css/materialize.min.css" media="screen,projection" />
 </head>
 <body>
 	<div class="container">
-		<form action="salvarpessoa" method="post">
+		<form action="salvarpessoa" method="post" th:object="${pessoaobj}"> <!-- o parâmtro th:object indica o objeto que retorna do controller para edição -->
+			<label>ID:</label>
+			<input type="text" name="id" th:field="*{id}" readonly="readonly"> <!-- th:field="*{id}" aposnta para os atributosdo objeto -->
 			<label>Nome:</label> 
-			<input type="text" name="nome">
+			<input type="text" name="nome" th:field="*{nome}">
 		    <label>Sobrenome:</label>
-			<input type="text" name="sobrenome">
+			<input type="text" name="sobrenome" th:field="*{sobrenome}">
 		    <label>Idade:</label>
-		    <input type="text" name="idade">
+		    <input type="text" name="idade" th:field="*{idade}">
 			<button class="btn waves-effect waves-light" type="submit" name="action">Salvar
 	    		<i class="material-icons right">send</i>
 	  		</button>
@@ -37,6 +39,9 @@
 				<td th:text=${pessoa.nome}></td>
 				<td th:text=${pessoa.sobrenome}></td>
 				<td th:text=${pessoa.idade}></td>
+				<!-- Passando um parâmetro com thymeleaf por link para o back -->
+				<td><a th:href="@{/editarpessoa/{idpessoa}(idpessoa=${pessoa.id})}">Editar</a></td>
+				<td><a th:href="@{/excluirpessoa/{idpessoa}(idpessoa=${pessoa.id})}">Excluir</a></td>
 			</tr>
 		</table>
 	</div>
