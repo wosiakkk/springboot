@@ -38,6 +38,10 @@ public class PessoaController {
 		ModelAndView modelAndView = new ModelAndView("cadastro/cadastropessoa");
 		//add um objeto vazio para a primera execução
 		modelAndView.addObject("pessoaobj", new Pessoa());
+		//carregando a lista de pessoas da tabela
+		// buscando todos os usuários
+		Iterable<Pessoa> pessoasIt = pessoaRepository.findAll();
+		modelAndView.addObject("pessoas", pessoasIt);
 		return modelAndView;
 	}
 
@@ -125,6 +129,19 @@ public class PessoaController {
 		modelAndView.addObject("pessoas", pessoaRepository.findPessoaByName(nomepesquisa));
 		//add um objeto vazio para a o form funcionar corretamente, por causa da edição
 		modelAndView.addObject("pessoaobj", new Pessoa());
+		return modelAndView;
+	}
+	
+	/*Método para interceptar a requisição ao clicar em um nome de usuário na datatable.*/
+	@GetMapping("/telefones/{idpessoa}")
+	public ModelAndView telefones(@PathVariable("idpessoa") Long idpessoa) {
+		//carregando o objeto pessoa com a busca pelo id passado como parâmetro, lembrando que o find do spring retorna optional
+		Optional<Pessoa> pessoa = pessoaRepository.findById(idpessoa);
+		//setando o retorno que será para a tela de telefones
+		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
+		//add o objeto pessoa ao modelandview, o método get() do optional pega o objeto do tipo pessoa pesquisado
+		modelAndView.addObject("pessoaobj", pessoa.get());
+		//retornando o modelandview preenchido
 		return modelAndView;
 	}
 }

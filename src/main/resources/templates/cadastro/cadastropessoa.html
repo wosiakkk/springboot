@@ -4,7 +4,7 @@
 <!-- Importações necessárias para utilizar o Thymeleaf -->
 <head>
 <meta charset="UTF-8">
-<title>Insert title here</title>
+<title>Cadastro de pessoas</title>
 <!--Import Google Icon Font-->
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
 	rel="stylesheet">
@@ -89,7 +89,8 @@
 		<tr th:each="pessoa : ${pessoas}">
 			<!-- foreach do thymeleaf, recuperando alista do bd pessoas e jogando em varipaveis pessoa -->
 			<td th:text=${pessoa.id}></td>
-			<td th:text=${pessoa.nome}></td>
+			<!-- Como a tag td não pode virar link, exibimos o conteúdo em um spam e colocamos a tag link por fora -->
+			<td><a th:href="@{/telefones/{idpessoa}(idpessoa=${pessoa.id})}"><span th:text=${pessoa.nome}></span></a></td>
 			<td th:text=${pessoa.sobrenome}></td>
 			<td th:text=${pessoa.idade}></td>
 			<!-- Passando um parâmetro com thymeleaf por link para o back -->
