@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import curso.springboot.model.Pessoa;
+import curso.springboot.model.Telefone;
 import curso.springboot.repository.PessoaRepository;
+import curso.springboot.repository.TelefoneRepository;
 import javassist.expr.NewArray;
 
 //anotação necessária para indicar ao springboot que essa classe é um controller
@@ -26,7 +28,9 @@ public class PessoaController {
 	 */
 	@Autowired
 	private PessoaRepository pessoaRepository;
-
+	@Autowired
+	private TelefoneRepository telefoneRepository; 
+	
 	/*
 	 * método para interceptar a requisição de qualquer link contendo
 	 * "/cadastropessoa" e retornar para a página salva em "cadastro/cadastropessoa"
@@ -144,4 +148,21 @@ public class PessoaController {
 		//retornando o modelandview preenchido
 		return modelAndView;
 	}
+	
+	/*Método que intercepta um objeto telefone e um long que será sua fk referente ao usuário
+	 * dono do telefone*/
+	@PostMapping("**/addfonePessoa/{pessoaid}")
+	public ModelAndView addfonePessoa(Telefone telefone, @PathVariable("pessoaid") Long pessoaid) {
+		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
+		//carregando a pessoa  refenrete a fk do telefone
+		Pessoa pessoa = pessoaRepository.findById(pessoaid).get();
+		//ionjentando a pessoa no obj telefone
+		telefone.setPessoa(pessoa);
+		//salvando o telefone
+		telefoneRepository.save(telefone);
+		modelAndView.addObject("pessoaobj", pessoa);
+		
+		return modelAndView;
+	}
+	
 }
