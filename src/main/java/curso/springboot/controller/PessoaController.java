@@ -188,9 +188,33 @@ public class PessoaController {
 	 * dono do telefone*/
 	@PostMapping("**/addfonePessoa/{pessoaid}")
 	public ModelAndView addfonePessoa(Telefone telefone, @PathVariable("pessoaid") Long pessoaid) {
-		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
 		//carregando a pessoa  refenrete a fk do telefone
 		Pessoa pessoa = pessoaRepository.findById(pessoaid).get();
+
+		
+		//validação sem framework(manual), para ter mais controle e evitar problemas complexos no sistema
+		//campo telefone vazio
+		if(telefone !=null && telefone.getNumero().isEmpty()
+				|| telefone.getTipo().isEmpty()) {
+
+			ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
+			modelAndView.addObject("pessoaobj", pessoa);
+			modelAndView.addObject("telefones", telefoneRepository.listarTodosPorIdDeUsuario(pessoa));
+			List<String> msg = new ArrayList<String>();
+			if(telefone.getNumero().isEmpty()) {
+				msg.add("Número deve ser informado");
+			}
+			if(telefone.getTipo().isEmpty()) {
+				msg.add("O tipo do telefone deve ser informado");
+			}
+			
+			modelAndView.addObject("msg", msg);
+			return modelAndView;
+		}
+		
+		
+		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
+	
 		//ionjentando a pessoa no obj telefone
 		telefone.setPessoa(pessoa);
 		//salvando o telefone
