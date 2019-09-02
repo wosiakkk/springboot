@@ -1,10 +1,15 @@
 package curso.springboot.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,9 +61,34 @@ public class PessoaController {
 	// inseridos
 	/*os 2 ** antes da URL salvarpessoa servem para a controller ignorar qualquer coisa que venha antes dessa url, 
 	 * pois quando editamos algum registro a url se altera 
-	 * ficando /editarpessoa/salvarpessoa e dando erro ao salvar, pois não consegue interceptar essa url.*/
+	 * ficando /editarpessoa/salvarpessoa e dando erro ao salvar, pois não consegue interceptar essa url.
+	 * A anotação @Valid ativa a validação implementa pelas anotações no model, e o objeto bindingResult irá
+	 * capturar a mensagem de erros das validações*/
 	@RequestMapping(method = RequestMethod.POST, value = "**/salvarpessoa")
-	public ModelAndView salvar(Pessoa pessoa) {
+	public ModelAndView salvar(@Valid Pessoa pessoa, BindingResult bindingResult) {
+		//verificaindo se houve erro nas validações antes de efetuar o save do obj
+		if(bindingResult.hasErrors()) {
+			/*como houve erro, retornamos para a mesma tela, porém como o 
+			 * obj pessoa carregado, sem dar um new, pois a página irá exibir o erro
+			 * e continuará com o objeto carregado no fomrulário*/
+			ModelAndView modelAndView = new ModelAndView("cadastro/cadastropessoa");
+			Iterable<Pessoa> pessoasIt = pessoaRepository.findAll();
+			modelAndView.addObject("pessoas", pessoasIt);
+			modelAndView.addObject("pessoaobj", pessoa);
+			//Mostrando as validações, com um array de strings
+			List<String> msg = new ArrayList<>();
+			/*descobrindo quais são os erros, usando o obj do spring ObjetcError
+			* vindo da lista do binding e carregando numa lsita de satring para ser mostrado em tela*/
+			for(ObjectError objectError : bindingResult.getAllErrors()) {
+				//O getDefaultMessage() pega as mensagens definidas nas anotações no model
+				msg.add(objectError.getDefaultMessage());
+			}
+			//add o objeto de lista de mensagens no modelandview
+			modelAndView.addObject("msg", msg);
+			//e para que o código pare por aquie  não continue sua execução, colocamos um return para ModelAndView
+			return modelAndView;
+		}
+		
 		pessoaRepository.save(pessoa);
 		// setando a view de retorno no modelandview
 		ModelAndView modelAndView = new ModelAndView("cadastro/cadastropessoa");

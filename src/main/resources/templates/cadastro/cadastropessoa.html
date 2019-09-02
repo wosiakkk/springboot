@@ -18,6 +18,12 @@
 	<h3>Spring Boot + Thymeleaf + Materialize Design</h3>
 	<br />
 	<h5>Cadastro de Pessoas</h5>
+	<br/><!-- Mensagens de erro das validações do back -->
+		<!-- Varrendo a lsita de erros com thymeleaf --> 
+		<div th:each = "m : ${msg}">
+			<span th:text = "${m}"></span>
+		</div>
+	<br/>
 	<div class="row">
 		<form action="salvarpessoa" id="formpessoa" method="post"
 			th:object="${pessoaobj}" class="col s12">
