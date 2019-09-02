@@ -1,5 +1,6 @@
 package curso.springboot.controller;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -143,6 +144,10 @@ public class PessoaController {
 		Optional<Pessoa> pessoa = pessoaRepository.findById(idpessoa);
 		//setando o retorno que será para a tela de telefones
 		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
+		//Pegando a lista de telefones do usuário selecionado para mostrar na data table
+		List<Telefone> listaTelefone = telefoneRepository.listarTodosPorIdDeUsuario(pessoa.get());
+		//add ao Model a lsita de telefones do usário
+		modelAndView.addObject("telefones", listaTelefone);
 		//add o objeto pessoa ao modelandview, o método get() do optional pega o objeto do tipo pessoa pesquisado
 		modelAndView.addObject("pessoaobj", pessoa.get());
 		//retornando o modelandview preenchido
@@ -160,9 +165,30 @@ public class PessoaController {
 		telefone.setPessoa(pessoa);
 		//salvando o telefone
 		telefoneRepository.save(telefone);
+		List<Telefone> listaTelefone = telefoneRepository.listarTodosPorIdDeUsuario(pessoa);
+		//add ao Model a lsita de telefones do usário
+		modelAndView.addObject("telefones", listaTelefone);
 		modelAndView.addObject("pessoaobj", pessoa);
 		
 		return modelAndView;
 	}
+	
+	@GetMapping("/excluirtelefone/{idtelefone}")
+	public ModelAndView removerTelefone(@PathVariable("idtelefone") Long idtelefone) {
+		// setando a view de retorno no modelandview
+		ModelAndView modelAndView = new ModelAndView("cadastro/telefones");
+		//recuperando o obj pessoa do telefone antes da exclusão para poder setar na tela novamente
+		Pessoa pessoaobj = telefoneRepository.findById(idtelefone).get().getPessoa();
+		//removendo o telefone através do id passado por parâmetro
+		telefoneRepository.deleteById(idtelefone);
+		// buscando todos os telefones novamente após a exclusão
+		Iterable<Telefone> telefonesIt = telefoneRepository.findAll();
+		modelAndView.addObject("telefones", telefonesIt);
+		//add um objeto vazio para a o form funcionar corretamente, por causa da edição
+		modelAndView.addObject("pessoaobj", pessoaobj);
+		// efetuando a resposta com view e model
+		return modelAndView;
+	}
+	
 	
 }
