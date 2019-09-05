@@ -1,11 +1,16 @@
 package curso.springboot.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -27,8 +32,22 @@ public class Usuario implements UserDetails{
 	private String login;
 	private String senha;
 	
-	
-	
+	/*Um usuário pode ter um ou muitos acessos.
+	 * Já a anotação JoinTable é apra criar automaticamente uma table associativa, pois
+	 * o relacionamento é muitos para muitos()muitos acessos tem muitos usuários e 
+	 * muitos usuários tem muitos acessos), o parâmetro name define o nome da tabela.
+	 * Ja o atributo joincolumn com a sua anotação é para identificar(amarrar) para uqal usuário nessa tabela
+	 * vai ser acessado, sendo o nome da coluna usuario_id da tabela usuarios_role referenciando a coluna id da tabela
+	 * usuario.
+	 * Já a anotação inverseJoinColumn é o join column refenrete a outra tabela da classe Role, na qual será criada 
+	 * uma coluna com o nome role_id na tabela associativa que irá referênciar a coluna id na tabela role*/
+	@OneToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "usuarios_role", 
+		joinColumns = @JoinColumn(name = "usuario_id",
+				referencedColumnName = "id",table = "usuario"),
+					inverseJoinColumns = @JoinColumn(name = "role_id",
+							referencedColumnName = "id", table = "role"))
+	private List<Role> acessos;
 	
 	
 	public Long getId() {
@@ -58,7 +77,7 @@ public class Usuario implements UserDetails{
 	@Override //Retorna os acessos
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
-		return null;
+		return acessos;
 	}
 
 	@Override

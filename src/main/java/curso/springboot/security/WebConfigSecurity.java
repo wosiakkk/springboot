@@ -30,6 +30,7 @@ public class WebConfigSecurity extends WebSecurityConfigurerAdapter{
 		.disable() //desabilitando as configurações padrões do Spring
 		.authorizeRequests() //Permitir restringir acessos
 		.antMatchers(HttpMethod.GET, "/").permitAll() //Permite que qualquer usuário acesse a página inicial do sistema sem precisar estar logado
+		.antMatchers(HttpMethod.GET, "/cadastropessoa").hasAnyRole("ADMIN") //Restringo o acesso a url de cadastro de pessoa a somente adms, não é necessário o onme completo ROLE_ADMIN do bd,o spring já indenfica
 		.anyRequest().authenticated()
 		.and().formLogin().permitAll() //Permite acesso a qualquer usuário ao form de login 
 		.and().logout() //Mapeia a URL de saída do sistema (logout) e invalida usuário autenticado

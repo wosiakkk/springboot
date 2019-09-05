@@ -1,10 +1,12 @@
 package curso.springboot.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import curso.springboot.model.Usuario;
 import curso.springboot.repository.UsuarioRepository;
@@ -13,9 +15,10 @@ import curso.springboot.repository.UsuarioRepository;
  * para utilizar os recursos de consulta ao banco de dados para o Spring Security.
  * Essa classe será passada como parâmetro para a classe WebConfigSecurity.
  * é necessário a a anotação @Service para dizer ao Spring que essa classe é um serviço.
- * */
+ * Já a anotação @Transaction é necessária para a classe poder carregar no BD os acessos*/
 
 @Service
+@Transactional
 public class ImplementacaoUserDetailService implements UserDetailsService{
 
 	//Injeção do repository 
@@ -32,7 +35,9 @@ public class ImplementacaoUserDetailService implements UserDetailsService{
 		if(usuario == null) {
 			throw new UsernameNotFoundException("Usuário não foi encontrado");
 		}
-		return usuario;
+		/*No retorno será utilizado um objeto do spring(userdetail) no qual é passado usuário, senha e os acessos e também
+		 * os demais retornos dos métodos sobrescritos da interface como isenable, isaccountnonexpired, etc*/
+		return new User(usuario.getLogin(), usuario.getSenha(), usuario.isEnabled(), usuario.isAccountNonExpired(), usuario.isCredentialsNonExpired(), usuario.isAccountNonLocked(), usuario.getAuthorities());
 	}
 
 }
