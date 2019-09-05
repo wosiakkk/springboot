@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -32,7 +33,8 @@ public class Usuario implements UserDetails{
 	private String login;
 	private String senha;
 	
-	/*Um usuário pode ter um ou muitos acessos.
+	/*Um usuário pode ter um ou muitos acessos e um acesso pode ter muitos usuários(correção de onytomany para manytomany e add unique constraint ALTER TABLE public.usuarios_role
+  ADD CONSTRAINT uk_krvk2qx218dxa3ogdyplk0wxw UNIQUE(role_id, usuario_id);).
 	 * Já a anotação JoinTable é apra criar automaticamente uma table associativa, pois
 	 * o relacionamento é muitos para muitos()muitos acessos tem muitos usuários e 
 	 * muitos usuários tem muitos acessos), o parâmetro name define o nome da tabela.
@@ -41,7 +43,7 @@ public class Usuario implements UserDetails{
 	 * usuario.
 	 * Já a anotação inverseJoinColumn é o join column refenrete a outra tabela da classe Role, na qual será criada 
 	 * uma coluna com o nome role_id na tabela associativa que irá referênciar a coluna id na tabela role*/
-	@OneToMany(fetch = FetchType.EAGER)
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "usuarios_role", 
 		joinColumns = @JoinColumn(name = "usuario_id",
 				referencedColumnName = "id",table = "usuario"),
