@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <!-- Importações necessárias para utilizar o Thymeleaf -->
 <head>
 <meta charset="UTF-8">
@@ -46,7 +47,10 @@
 						type="text" name="sobrenome" id="sobrenome"
 						th:field="*{sobrenome}" class="validate">
 				</div>
-				<div class="input-field col s6">
+				<!-- a tag sec é da integração do thymeleaf com o spring security, declarado no topo da página
+				essa tag pode ocultar partes das páginas de acordo com os acessos do usuário, o 
+				hasRole é para verificar um acesso só, caso a verificação sirva para mais de uma cesso utiliza-se a hasAnyRole -->
+				<div class="input-field col s6" sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')">
 					<label for="idade" class="active">Idade:</label> <input type="text"
 						name="idade" id="idade" th:field="*{idade}" class="validate">
 				</div>
