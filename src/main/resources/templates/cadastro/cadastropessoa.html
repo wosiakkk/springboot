@@ -52,9 +52,17 @@
 				<!-- a tag sec é da integração do thymeleaf com o spring security, declarado no topo da página
 				essa tag pode ocultar partes das páginas de acordo com os acessos do usuário, o 
 				hasRole é para verificar um acesso só, caso a verificação sirva para mais de uma cesso utiliza-se a hasAnyRole -->
-				<div class="input-field col s6" sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')">
+				<div class="input-field col s3" sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')">
 					<label for="idade" class="active">Idade:</label> <input type="text"
 						name="idade" id="idade" th:field="*{idade}" class="validate" >
+				</div>
+				<div class="input-field col s3">
+					<label for="sexopessoa" class="active">Sexo:</label>
+					<select class="browser-default" th:field="*{sexopessoa}">
+						<option value="" disabled selected>Escolha uma opção</option>
+						<option value="MASCULINO" th:text="Masculino" />
+						<option value="FEMININO" th:text="Feminino" />
+					</select>
 				</div>
 			</div>
 			<div class="row">

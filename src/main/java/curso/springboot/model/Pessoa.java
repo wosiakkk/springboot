@@ -38,6 +38,8 @@ public class Pessoa implements Serializable{
 	@Min(value = 18, message = "Idade deve ser no mínimo 18")
 	private int idade;
 	
+	private String sexopessoa;
+	
 	private String cep;
 	private String rua;
 	private String bairro;
@@ -113,5 +115,10 @@ public class Pessoa implements Serializable{
 	public void setIbge(String ibge) {
 		this.ibge = ibge;
 	}
-	
+	public String getSexopessoa() {
+		return sexopessoa;
+	}
+	public void setSexopessoa(String sexopessoa) {
+		this.sexopessoa = sexopessoa;
+	}
 }

@@ -67,7 +67,7 @@ public class PessoaController {
 	@RequestMapping(method = RequestMethod.POST, value = "**/salvarpessoa")
 	public ModelAndView salvar(@Valid Pessoa pessoa, BindingResult bindingResult) {
 		//evitando erros ao editar e salvar novamente o obj, o spring pode necessitar da lista de telefones em memória associada a pessoa, devido as operações estarem defindas em cascata no atributo telefones
-		pessoa.setTelefones(telefoneRepository.listarTodosPorIdDeUsuario(pessoa));
+		//pessoa.setTelefones(telefoneRepository.listarTodosPorIdDeUsuario(pessoa));
 		//verificaindo se houve erro nas validações antes de efetuar o save do obj
 		if(bindingResult.hasErrors()) {
 			/*como houve erro, retornamos para a mesma tela, porém como o 
