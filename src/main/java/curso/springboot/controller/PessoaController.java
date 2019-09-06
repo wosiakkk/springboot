@@ -161,9 +161,21 @@ public class PessoaController {
 	/*Método para o campo de busca por nome. @PostMapping é a abreviação de @RequestMapping(method = RequestMethod.POST) 
 	 * A anotação RequestParam pega o parâmetro enviado pelo action do form via post*/
 	@PostMapping("**/pesquisarpessoa")
-	public ModelAndView pesquisar(@RequestParam("nomepesquisa") String nomepesquisa) {
+	public ModelAndView pesquisar(@RequestParam("nomepesquisa") String nomepesquisa,
+			@RequestParam("sexopesquisa") String sexopesquisa) {
+		
+		List<Pessoa> pessoas = new ArrayList<Pessoa>();
+
+		//pesquisar por nome e sexo
+		if(sexopesquisa !=null && !sexopesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findPessoaByNameAndSex(nomepesquisa, sexopesquisa);
+		}else {
+			//pesquisa só por nome
+			pessoas = pessoaRepository.findPessoaByName(nomepesquisa);
+		}
+		
 		ModelAndView modelAndView = new ModelAndView("cadastro/cadastropessoa");
-		modelAndView.addObject("pessoas", pessoaRepository.findPessoaByName(nomepesquisa));
+		modelAndView.addObject("pessoas", pessoas);
 		//add um objeto vazio para a o form funcionar corretamente, por causa da edição
 		modelAndView.addObject("pessoaobj", new Pessoa());
 		return modelAndView;

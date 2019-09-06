@@ -20,4 +20,7 @@ public interface PessoaRepository extends CrudRepository<Pessoa, Long> {
 	 * CrudRepository, fazemos uma query customizada em JPQL*/
 	@Query(value = "select p from Pessoa p where p.nome like %?1%")
 	List<Pessoa> findPessoaByName(String nome);
+	//query para o camp de pesquisa com nome e sexo
+	@Query(value = "select p from Pessoa p where p.nome like %?1% and p.sexopessoa = ?2")
+	List<Pessoa> findPessoaByNameAndSex(String nome, String sexopessoa);
 }
