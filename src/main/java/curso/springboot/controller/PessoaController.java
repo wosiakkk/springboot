@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +38,10 @@ public class PessoaController {
 	private PessoaRepository pessoaRepository;
 	@Autowired
 	private TelefoneRepository telefoneRepository; 
+	//Injeção da calsse de relatório
+	@Autowired
+	private ReportUtil reportUtil;
+	
 	
 	/*
 	 * método para interceptar a requisição de qualquer link contendo
@@ -179,6 +185,46 @@ public class PessoaController {
 		//add um objeto vazio para a o form funcionar corretamente, por causa da edição
 		modelAndView.addObject("pessoaobj", new Pessoa());
 		return modelAndView;
+	}
+	
+	/*Método para imprimir relatório*/
+	@GetMapping("**/pesquisarpessoa")
+	public void imprimePdf(@RequestParam("nomepesquisa") String nomepesquisa,
+			@RequestParam("sexopesquisa") String sexopesquisa,
+			HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		List<Pessoa> pessoas = new ArrayList<Pessoa>();
+		//há nome e sexo
+		if(sexopesquisa !=null && !sexopesquisa.isEmpty()
+				&& nomepesquisa != null && !nomepesquisa.isEmpty()) {
+			pessoas = pessoaRepository.findPessoaByNameAndSex(nomepesquisa, sexopesquisa);
+		}else if(nomepesquisa !=null && !nomepesquisa.isEmpty()) { //caso só informe o nome
+			pessoas = pessoaRepository.findPessoaByName(nomepesquisa);
+		}else if(sexopesquisa !=null && !sexopesquisa.isEmpty()) { //caso só informe o sexo
+			pessoas = pessoaRepository.findPessoaBySexo(sexopesquisa);
+		}else { // caso não informe nada, retornamos todos so usuários
+			Iterable<Pessoa> iterable = pessoaRepository.findAll();
+			for (Pessoa pessoa : iterable) {
+				pessoas.add(pessoa);
+			}
+		}
+		
+		/*Chamar o serviço que faz a geração do relatório, passando
+		 * a lista de dados pessoas, o nome do arquivo que será procurado webapp/relatorios
+		 * que no caso será 'pessoa'.jasper e o contexto obtido pelo parâmetro request
+		 * do método*/
+		byte[] pdf = reportUtil.gerarRelatorio(pessoas, "pessoa", request.getServletContext());
+		/*Informando dados da resposta para o navegador*/
+		/*Informando o tamanho da resposta para o navegador*/
+		response.setContentLength(pdf.length);
+		/*Definir na resposta o tipo de arquivo*/
+		response.setContentType("application/octet-stream");
+		/*Definindo o cabeçalho da resposta*/
+		String headerKey = "Content-Disposition";
+		String headerValue = String.format("attachment; filename=\"%s\"", "relatorio.pdf");
+		response.setHeader(headerKey, headerValue);
+		/*Finaliznado a resposta para o navegador*/
+		response.getOutputStream().write(pdf);
 	}
 	
 	/*Método para interceptar a requisição ao clicar em um nome de usuário na datatable.*/

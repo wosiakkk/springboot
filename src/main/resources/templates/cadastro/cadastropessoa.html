@@ -116,7 +116,7 @@
 	<br />
 	<br />
 	<div class="row">
-		<form action="pesquisarpessoa" method="post" class="col s12">
+		<form id="pesquisarpessoa" action="pesquisarpessoa" method="post" class="col s12">
 			<div class="row">
 				<div class="input-field col s6">
 					<label for="nomepesquisa" class="active">Pesquisa por Nome:</label>
@@ -133,6 +133,10 @@
 			</div>
 			<div class="row">
 				<div class="input-field col s12">
+				<!-- O botão para gerar PDF não pode redirecionar a tela, pois se não o PDF se perde.
+				Por esse motivo nesse botão será realizado um get, ele irá alterar o método do formulário com javascript 
+				quando o botão for clicado-->
+					<button type="submit" class="btn waves-effect waves-light" onclick="document.getElementById('pesquisarpessoa').method = 'get'">PDF</button>
 					<button type="submit" class="btn waves-effect waves-light">Buscar</button>
 					<a class="btn waves-effect waves-light" href="/listapessoas">Lista Pessoas</a>
 				</div>
