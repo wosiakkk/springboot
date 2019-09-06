@@ -44,7 +44,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="input-field col s6">
+				<div class="input-field col s3">
 					<label for="sobrenome" class="active">Sobrenome:</label> <input
 						type="text" name="sobrenome" id="sobrenome"
 						th:field="*{sobrenome}" class="validate" placeholder="Insira o sobrenome">
@@ -62,6 +62,12 @@
 						<option value="" disabled selected>Escolha uma opção</option>
 						<option value="MASCULINO" th:text="Masculino" />
 						<option value="FEMININO" th:text="Feminino" />
+					</select>
+				</div>
+				<div class="input-field col s3">
+					<label for="profissao" class="active">Profissão:</label>
+					<select class="browser-default" th:field="*{profissao}" id="profissao">
+						<option th:each = "p : ${profissoes}" th:value = "${p.id}" th:text="${p.nome}">
 					</select>
 				</div>
 			</div>

@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
@@ -39,6 +40,9 @@ public class Pessoa implements Serializable{
 	private int idade;
 	
 	private String sexopessoa;
+	
+	@ManyToOne
+	private Profissao profissao;
 	
 	private String cep;
 	private String rua;
@@ -120,5 +124,11 @@ public class Pessoa implements Serializable{
 	}
 	public void setSexopessoa(String sexopessoa) {
 		this.sexopessoa = sexopessoa;
+	}
+	public void setProfissao(Profissao profissao) {
+		this.profissao = profissao;
+	}
+	public Profissao getProfissao() {
+		return profissao;
 	}
 }

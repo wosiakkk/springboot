@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 import curso.springboot.model.Pessoa;
 import curso.springboot.model.Telefone;
 import curso.springboot.repository.PessoaRepository;
+import curso.springboot.repository.ProfissaoRepository;
 import curso.springboot.repository.TelefoneRepository;
 import javassist.expr.NewArray;
 
@@ -41,7 +42,8 @@ public class PessoaController {
 	//Injeção da calsse de relatório
 	@Autowired
 	private ReportUtil reportUtil;
-	
+	@Autowired
+	private ProfissaoRepository profissaoRepository;
 	
 	/*
 	 * método para interceptar a requisição de qualquer link contendo
@@ -58,6 +60,8 @@ public class PessoaController {
 		// buscando todos os usuários
 		Iterable<Pessoa> pessoasIt = pessoaRepository.findAll();
 		modelAndView.addObject("pessoas", pessoasIt);
+		//add as profissões para serem add ao combo na tela
+		modelAndView.addObject("profissoes", profissaoRepository.findAll());
 		return modelAndView;
 	}
 
@@ -94,6 +98,8 @@ public class PessoaController {
 			//add o objeto de lista de mensagens no modelandview
 			modelAndView.addObject("msg", msg);
 			//e para que o código pare por aquie  não continue sua execução, colocamos um return para ModelAndView
+			//add as profissões para serem add ao combo na tela
+			modelAndView.addObject("profissoes", profissaoRepository.findAll());
 			return modelAndView;
 		}
 		
@@ -107,6 +113,8 @@ public class PessoaController {
 		modelAndView.addObject("pessoas", pessoasIt);
 		//add um objeto vazio para a o form funcionar corretamente, por causa da edição
 		modelAndView.addObject("pessoaobj", new Pessoa());
+		//add as profissões para serem add ao combo na tela
+		modelAndView.addObject("profissoes", profissaoRepository.findAll());
 		// efetuando a resposta com view e model
 		return modelAndView;
 	}
@@ -145,6 +153,8 @@ public class PessoaController {
 		Optional<Pessoa> pessoa = pessoaRepository.findById(idpessoa);
 		//add o objeto pessoa ao modelandview, o método get() do optional pega o objeto do tipo pessoa pesquisado
 		modelAndView.addObject("pessoaobj", pessoa.get());
+		//add as profissões para serem add ao combo na tela
+		modelAndView.addObject("profissoes", profissaoRepository.findAll());
 		//retornando o modelandview preenchido
 		return modelAndView;
 	}
@@ -184,6 +194,8 @@ public class PessoaController {
 		modelAndView.addObject("pessoas", pessoas);
 		//add um objeto vazio para a o form funcionar corretamente, por causa da edição
 		modelAndView.addObject("pessoaobj", new Pessoa());
+		//add as profissões para serem add ao combo na tela
+		modelAndView.addObject("profissoes", profissaoRepository.findAll());
 		return modelAndView;
 	}
 	
