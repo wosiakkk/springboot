@@ -40,27 +40,27 @@
 				</div>
 				<div class="input-field col s6">
 					<label for="nome" class="active">Nome:</label> <input type="text"
-						name="nome" id="nome" th:field="*{nome}" class="validate">
+						name="nome" id="nome" th:field="*{nome}" class="validate" placeholder="Insira o nome">
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s6">
 					<label for="sobrenome" class="active">Sobrenome:</label> <input
 						type="text" name="sobrenome" id="sobrenome"
-						th:field="*{sobrenome}" class="validate">
+						th:field="*{sobrenome}" class="validate" placeholder="Insira o sobrenome">
 				</div>
 				<!-- a tag sec é da integração do thymeleaf com o spring security, declarado no topo da página
 				essa tag pode ocultar partes das páginas de acordo com os acessos do usuário, o 
 				hasRole é para verificar um acesso só, caso a verificação sirva para mais de uma cesso utiliza-se a hasAnyRole -->
 				<div class="input-field col s6" sec:authorize="hasAnyRole('ROLE_USER', 'ROLE_ADMIN')">
 					<label for="idade" class="active">Idade:</label> <input type="text"
-						name="idade" id="idade" th:field="*{idade}" class="validate">
+						name="idade" id="idade" th:field="*{idade}" class="validate" >
 				</div>
 			</div>
 			<div class="row">
 				<div class="input-field col s6">
 					<label for="cep" class="active">CEP:</label> <input type="text"
-						name="cep" id="cep" th:field="*{cep}">
+						name="cep" id="cep" th:field="*{cep}" placeholder="Insira o CEP">
 				</div>
 				<div class="input-field col s6">
 					<label for="rua" id="labelrua" >Rua:</label> <input type="text"
@@ -146,81 +146,8 @@
 		</tr>
 	</table>
 
-<!-- Adicionando Javascript do VIACEP -->
-    <script type="text/javascript" >
-
-        $(document).ready(function() {
-
-            function limpa_formulário_cep() {
-                // Limpa valores do formulário de cep.
-                $("#rua").val("");
-                $("#bairro").val("");
-                $("#cidade").val("");
-                $("#uf").val("");
-                $("#ibge").val("");
-            }
-            
-            //Quando o campo cep perde o foco.
-            $("#cep").blur(function() {
-
-                //Nova variável "cep" somente com dígitos.
-                var cep = $(this).val().replace(/\D/g, '');
-
-                //Verifica se campo cep possui valor informado.
-                if (cep != "") {
-
-                    //Expressão regular para validar o CEP.
-                    var validacep = /^[0-9]{8}$/;
-
-                    //Valida o formato do CEP.
-                    if(validacep.test(cep)) {
-
-                        //Preenche os campos com "..." enquanto consulta webservice.
-                        $("#rua").val("...");
-                        $("#bairro").val("...");
-                        $("#cidade").val("...");
-                        $("#uf").val("...");
-                        $("#ibge").val("...");
-
-                        //Consulta o webservice viacep.com.br/
-                        $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
-
-                            if (!("erro" in dados)) {
-                                //Atualiza os campos com os valores da consulta.
-                                /*Código add inserido: add classe active no label do materialize para realizar
-                                o efeito aumoticamente de transição do label preenchido pelo js*/
-                                $("#rua").val(dados.logradouro);
-                                $("#labelrua").addClass('active');
-                                $("#bairro").val(dados.bairro);
-                                $("#labelbairro").addClass('active');
-                                $("#cidade").val(dados.localidade);
-                                $("#labelcidade").addClass('active');
-                                $("#uf").val(dados.uf);
-                                $("#labeluf").addClass('active');
-                                $("#ibge").val(dados.ibge);
-                                $("#labelibge").addClass('active');
-                            } //end if.
-                            else {
-                                //CEP pesquisado não foi encontrado.
-                                limpa_formulário_cep();
-                                alert("CEP não encontrado.");
-                            }
-                        });
-                    } //end if.
-                    else {
-                        //cep é inválido.
-                        limpa_formulário_cep();
-                        alert("Formato de CEP inválido.");
-                    }
-                } //end if.
-                else {
-                    //cep sem valor, limpa formulário.
-                    limpa_formulário_cep();
-                }
-            });
-        });
-
-    </script>
+<!-- Adicionando Javascript do VIACEP com thymeleaf após configurar ResourceHandlers no spring-->
+<script type="text/javascript" th:src="@{/js/viacepScript.js}"></script>
 
 
 

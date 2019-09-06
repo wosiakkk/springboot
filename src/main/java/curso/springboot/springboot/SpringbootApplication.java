@@ -8,6 +8,7 @@ import org.springframework.core.Ordered;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -32,6 +33,12 @@ public class SpringbootApplication implements WebMvcConfigurer{
 		//mapemando a url de login e setando a página que deve ser redirecionada
 		registry.addViewController("/login").setViewName("/login");
 		registry.setOrder(Ordered.LOWEST_PRECEDENCE);
+	}
+	
+	//método para configurar os recursos estaticos como javascript
+	@Override
+	public void addResourceHandlers(ResourceHandlerRegistry registry) {
+		registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
 	}
 	
 }
